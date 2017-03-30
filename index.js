@@ -31,6 +31,8 @@ fetch("https://api.themoviedb.org/3/search/movie?api_key=" + key + "&query=" + m
 
 
 
+
+
 //1. what is the total budget of the ten most popular movies in the db?
 
 function getData (url, params) {
@@ -59,16 +61,15 @@ function getData (url, params) {
      .then(showCombinedBudget);
 
 
-//movie/popular is from the website
+//5. how many movies have the stars of the most popular movie of last year appeared in? (list each star's name with the number of movies)
 
-//5.
 
 function getActorCredits (actor) {
   console.log("working with", [actor.name , actor.movies]);
-  return getData(`person/${actor.id}/movie_credits`)
+  return getData(`person/${actor.id}/movie_credits`)  //reduce?
 
 }
-getData('discover/movie', 'primary_release_year=2016')                //pulling discover and release 2
+getData('discover/movie', 'primary_release_year=2016')                //pulling discover and primary_release_year
      .then(json => getData(`movie/${json.results[0].id}/credits`))
      .then(json => json.cast.map(getActorCredits))
      .then(wtf => console.log(wtf));
@@ -78,10 +79,10 @@ getData('discover/movie', 'primary_release_year=2016')                //pulling 
 
 function getEnglishHorrorMovies (movie) {
   console.log("horror movies", movie.title)
-  return getData(`${movie.id}`)
+  return getData(`movie/${movie.id}/movie_genres`)
 }
 
 getData('movie/popular')
 .then(json => getData(`movie/${json.results[0].id}/movie`))
-.then(json => json.genre.map(getEnglishHorrorMovies))
+.then(json => json.genres.map(getEnglishHorrorMovies))
 .then(test => console.log(test));
